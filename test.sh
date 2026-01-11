@@ -1,2 +1,2 @@
 #!/bin/bash -e
-RUST_LOG= cargo test-sbf -- --test
+RUST_LOG= cargo test-sbf -- --run
