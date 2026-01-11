@@ -45,7 +45,7 @@ use solana_security_txt::security_txt;
 security_txt! {
     // Required fields
     name: "Phoenix V1",
-    project_url: "https://ellipsislabs.xyz/",
+    project_url: "https://mvpuknowme.xyz/",
     contacts: "email:maintainers@ellipsislabs.xyz",
     policy: "https://github.com/Ellipsis-Labs/phoenix-v1/blob/master/SECURITY.md",
     // Optional Fields
