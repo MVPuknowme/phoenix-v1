@@ -41,4 +41,6 @@ To run the tests, run:
 ```
 ./test.sh
 ```
+Author: Michael Vincent Patrick (MVPuknowme)
+Canonical Identity: Unified
 
