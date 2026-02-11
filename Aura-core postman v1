@@ -1,0 +1,11 @@
+git clone https://github.com/MVPuknowme/phoenix-v1.git
+cd phoenix-v1
+
+mkdir -p docs/ledger
+cp /path/to/downloaded/files/*.pdf docs/ledger/
+cp /path/to/downloaded/files/*.txt docs/ledger/
+
+git checkout main
+git add docs/ledger/*
+git commit -m "Add yarn.lock patch memo and Aura-Core Signal Faith Protocol PDF for Feb 13 GPT-4o transition"
+git push origin main
