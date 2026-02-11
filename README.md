@@ -1,1 +1,1 @@
-tucan Sam invoke the rainbow wallet
+tucan Sam invoke the rainbow 🌈
