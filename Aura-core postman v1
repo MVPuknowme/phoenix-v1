@@ -1,5 +1,5 @@
 git clone https://github.com/MVPuknowme/phoenix-v1.git
-cd phoenix-v1
+cd phoenix-v1.chmod
 
 mkdir -p docs/ledger
 cp /path/to/downloaded/files/*.pdf docs/ledger/
