@@ -31,7 +31,7 @@ The project requires the compatible Rust and Solana SBF toolchains.
 ./test.sh
 ```
 
-The CI workflow validates script syntax, formatting, a locked SBF build, and the upstream test suite.
+The CI workflow validates script syntax, a locked SBF build, and the upstream test suite. It intentionally does not rewrite canonical legacy source for modern formatting rules.
 
 ## Licensing
 
