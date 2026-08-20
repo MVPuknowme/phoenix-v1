@@ -68,15 +68,24 @@ pub fn phoenix_test() -> ProgramTest {
     program_test.add_builtin_program(
         "spl_token",
         spl_token::id(),
-        ellipsis_client::processor!(spl_token::processor::Processor::process).unwrap(),
+        |first_instruction_account, invoke_context| {
+            ellipsis_client::program_test::builtin_process_instruction(
+                spl_token::processor::Processor::process,
+                first_instruction_account,
+                invoke_context,
+            )
+        },
     );
     program_test.add_builtin_program(
         "spl_associated_token_account",
         spl_associated_token_account::id(),
-        ellipsis_client::processor!(
-            spl_associated_token_account::processor::process_instruction
-        )
-        .unwrap(),
+        |first_instruction_account, invoke_context| {
+            ellipsis_client::program_test::builtin_process_instruction(
+                spl_associated_token_account::processor::process_instruction,
+                first_instruction_account,
+                invoke_context,
+            )
+        },
     );
 
     program_test
