@@ -59,7 +59,27 @@ pub struct PhoenixTestContext {
 }
 
 pub fn phoenix_test() -> ProgramTest {
-    ProgramTest::new("phoenix", phoenix::id(), None)
+    let mut program_test = ProgramTest::new("phoenix", phoenix::id(), None);
+
+    // ellipsis-client 0.2.1 embeds legacy SPL binaries that the pinned Solana
+    // runtime can no longer load reliably in current CI hosts. Keep Phoenix
+    // running from its SBF artifact, but register the same pinned SPL program
+    // processors natively for the integration harness.
+    program_test.add_builtin_program(
+        "spl_token",
+        spl_token::id(),
+        ellipsis_client::processor!(spl_token::processor::Processor::process).unwrap(),
+    );
+    program_test.add_builtin_program(
+        "spl_associated_token_account",
+        spl_associated_token_account::id(),
+        ellipsis_client::processor!(
+            spl_associated_token_account::processor::process_instruction
+        )
+        .unwrap(),
+    );
+
+    program_test
 }
 
 async fn setup_account(

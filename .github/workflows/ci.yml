@@ -1,0 +1,50 @@
+name: Phoenix Legacy CI
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phoenix-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Validate repository scripts
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n build.sh
+          bash -n test.sh
+          if grep -nE '^(diff --git|index [0-9a-f]+\.\.[0-9a-f]+|@@ )' Dockerfile; then
+            echo "Dockerfile contains patch text"
+            exit 1
+          fi
+          grep -Fq 'cargo build-sbf -- --locked --frozen' Dockerfile
+          grep -Fq 'ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)' test.sh
+          grep -Fq 'SBF_OUT_DIR="$ROOT/target/deploy" RUST_LOG= cargo test --locked --frozen --features no-entrypoint -- --test' test.sh
+
+      - name: Build and test in Solana toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm --platform linux/amd64 \
+            --volume "$GITHUB_WORKSPACE:/build" \
+            --workdir /build \
+            ellipsislabs/solana@sha256:aecd85000641b4d111aef45625dc55234004959d4a4203d61d4aea1a7ac83b1e \
+            bash -c 'cargo build-sbf -- --locked --frozen && ./test.sh'
