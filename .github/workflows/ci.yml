@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           persist-credentials: false
 
@@ -45,5 +45,5 @@ jobs:
           docker run --rm --platform linux/amd64 \
             --volume "$GITHUB_WORKSPACE:/build" \
             --workdir /build \
-            ellipsislabs/solana:latest \
-            bash -lc 'cargo fmt --all -- --check && cargo build-sbf -- --locked --frozen && ./test.sh'
+            ellipsislabs/solana@sha256:aecd85000641b4d111aef45625dc55234004959d4a4203d61d4aea1a7ac83b1e \
+            bash -c 'cargo fmt --all -- --check && cargo build-sbf -- --locked --frozen && ./test.sh'
