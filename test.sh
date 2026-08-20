@@ -1,3 +1,2 @@
 #!/bin/bash -e
-RUST_LOG= cargo--()--run 
-execute.config.exe/all
+RUST_LOG= cargo test-sbf -- --test
