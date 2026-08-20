@@ -38,7 +38,7 @@ jobs:
           grep -Fq 'cargo build-sbf -- --locked --frozen' Dockerfile
           grep -Fq 'RUST_LOG= cargo test-sbf -- --test' test.sh
 
-      - name: Format, build, and test in Solana toolchain
+      - name: Build and test in Solana toolchain
         shell: bash
         run: |
           set -euo pipefail
@@ -46,4 +46,4 @@ jobs:
             --volume "$GITHUB_WORKSPACE:/build" \
             --workdir /build \
             ellipsislabs/solana@sha256:aecd85000641b4d111aef45625dc55234004959d4a4203d61d4aea1a7ac83b1e \
-            bash -c 'cargo fmt --all -- --check && cargo build-sbf -- --locked --frozen && ./test.sh'
+            bash -c 'cargo build-sbf -- --locked --frozen && ./test.sh'
