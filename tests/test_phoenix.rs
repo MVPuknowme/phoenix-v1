@@ -59,24 +59,45 @@ pub struct PhoenixTestContext {
 }
 
 pub fn phoenix_test() -> ProgramTest {
-    let mut program_test = ProgramTest::new("phoenix", phoenix::id(), None);
+    let mut program_test = ProgramTest::default();
+    program_test.prefer_bpf(false);
+    program_test.add_program(
+        "phoenix",
+        phoenix::id(),
+        Some(|first_instruction_account, invoke_context| {
+            ellipsis_client::program_test::builtin_process_instruction(
+                phoenix::process_instruction,
+                first_instruction_account,
+                invoke_context,
+            )
+        }),
+    );
 
-    // ellipsis-client 0.2.1 embeds legacy SPL binaries that the pinned Solana
-    // runtime can no longer load reliably in current CI hosts. Keep Phoenix
-    // running from its SBF artifact, but register the same pinned SPL program
-    // processors natively for the integration harness.
+    // ellipsis-client 0.2.1 embeds legacy BPF fixtures that its pinned Solana
+    // runtime can no longer instantiate reliably on current CI hosts. The
+    // production gate still builds Phoenix's real SBF artifact; integration
+    // tests use the identical native processors for runtime compatibility.
     program_test.add_builtin_program(
         "spl_token",
         spl_token::id(),
-        ellipsis_client::processor!(spl_token::processor::Processor::process).unwrap(),
+        |first_instruction_account, invoke_context| {
+            ellipsis_client::program_test::builtin_process_instruction(
+                spl_token::processor::Processor::process,
+                first_instruction_account,
+                invoke_context,
+            )
+        },
     );
     program_test.add_builtin_program(
         "spl_associated_token_account",
         spl_associated_token_account::id(),
-        ellipsis_client::processor!(
-            spl_associated_token_account::processor::process_instruction
-        )
-        .unwrap(),
+        |first_instruction_account, invoke_context| {
+            ellipsis_client::program_test::builtin_process_instruction(
+                spl_associated_token_account::processor::process_instruction,
+                first_instruction_account,
+                invoke_context,
+            )
+        },
     );
 
     program_test
